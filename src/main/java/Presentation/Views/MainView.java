@@ -1,9 +1,9 @@
-// src/main/java/Presentation/Views/MainView.java
 package Presentation.Views;
 
 import Domain.Dtos.cars.CarResponseDto;
 import Domain.Dtos.maintenances.MaintenanceResponseDto;
 import Presentation.Models.CarsTableModel;
+import Presentation.Models.MaintenancesTableModel; // import agregado
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -13,41 +13,52 @@ import java.util.Date;
 import java.util.List;
 
 public class MainView extends JFrame {
+
+    //Panels
     private JPanel MainPanel;
     private JPanel CarsPanel;
-    private JPanel MaintenancesPanel;
     private JPanel AddCarsPanel;
     private JPanel TableCarsPanel;
+    private JPanel MaintenancesPanel;
+    private JPanel AddMaintenancesPanel;
+    private JPanel TableMaintenancesPanel;
+    private JPanel DatePickerPanel;
+
+    //TextFields
     private JTextField MakeField;
     private JTextField ModelField;
     private JTextField YearField;
+    private JTextField DescriptionField;
+
+    //Labels
+    private JLabel AddLabel;
+    private JLabel ModelLabel;
+    private JLabel YearLabel;
+
+    //Buttons
     private JButton CDeleteButton;
     private JButton CAddButton;
     private JButton CUpdateButton;
     private JButton CClearButton;
-    private JPanel AddMaintenancesPanel;
-    private JPanel TableMaintenancesPanel;
-    private JComboBox<String> TypeComboBox; // comboBox1
-    private JTextField DescriptionField;    // textField4
-    private JComboBox<CarResponseDto> CarIDComboBox; // comboBox2
-    private JLabel AddLabel;
-    private JLabel ModelLabel;
-    private JLabel YearLabel;
-    private JTable CarsTable;   // table1
-    private JTable MaintenancesTable; // table2
     private JButton MDeleteButton;
     private JButton MAddButton;
     private JButton MUpdateButton;
     private JButton MClearButton;
-    private JPanel DatePickerPanel;
-    private JTabbedPane MainTabbedPanel;
-    private JTextArea MessageTextArea;
 
+    //ComboBoxes and Tables
+    private JComboBox<String> TypeComboBox;
+    private JComboBox<CarResponseDto> CarIDComboBox;
+    private JTable CarsTable;
+    private JTable MaintenancesTable;
     private final CarsTableModel carsTableModel;
     private final MaintenancesTableModel maintenancesTableModel;
+    private JDateChooser DatePicker;
+    private JTabbedPane MainTabbedPanel;
+    private JTextArea MessageTextArea;
     private final LoadingOverlay carsLoadingOverlay;
     private final LoadingOverlay maintenancesLoadingOverlay;
-    private JDateChooser DatePicker;
+
+
 
     public MainView() {
         setTitle("Car Maintenances App");
@@ -68,10 +79,7 @@ public class MainView extends JFrame {
         DatePickerPanel.setLayout(new BorderLayout());
         DatePickerPanel.add(DatePicker, BorderLayout.CENTER);
 
-        TypeComboBox = (JComboBox<String>) TypeComboBox;
-        CarIDComboBox = (JComboBox<CarResponseDto>) CarIDComboBox;
-        DescriptionField = DescriptionField;
-
+        // No lógica en el view: solo inicialización de UI
         initTypeComboBox();
 
         MessageTextArea.setEditable(false);

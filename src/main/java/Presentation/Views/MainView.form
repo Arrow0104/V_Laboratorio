@@ -126,7 +126,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="aabd9" class="javax.swing.JTable" binding="table1" default-binding="true">
+                  <component id="aabd9" class="javax.swing.JTable" binding="CarsTable">
                     <constraints/>
                     <properties/>
                   </component>
@@ -184,13 +184,13 @@
                   <text value="Date "/>
                 </properties>
               </component>
-              <component id="39562" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+              <component id="39562" class="javax.swing.JComboBox" binding="CarIDComboBox">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="13265" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+              <component id="13265" class="javax.swing.JTextField" binding="DescriptionField">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -198,7 +198,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="f205f" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+              <component id="f205f" class="javax.swing.JComboBox" binding="TypeComboBox">
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -269,7 +269,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="93c1" class="javax.swing.JTable" binding="table2" default-binding="true">
+                  <component id="93c1" class="javax.swing.JTable" binding="MaintenancesTable">
                     <constraints/>
                     <properties/>
                   </component>
