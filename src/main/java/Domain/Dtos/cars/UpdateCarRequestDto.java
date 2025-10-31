@@ -1,18 +1,20 @@
 package Domain.Dtos.cars;
 
 public class UpdateCarRequestDto {
-    private Long id; // Car ID
+    private Long id;
     private String make;
     private String model;
     private int year;
+    private Long ownerId;
 
     public UpdateCarRequestDto() {}
 
-    public UpdateCarRequestDto(Long id, String make, String model, int year) {
+    public UpdateCarRequestDto(Long id, String make, String model, int year, Long ownerId) {
         this.id = id;
         this.make = make;
         this.model = model;
         this.year = year;
+        this.ownerId = ownerId;
     }
 
     // Getters & Setters

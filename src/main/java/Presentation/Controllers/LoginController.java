@@ -7,6 +7,7 @@ import Presentation.Views.LoginView;
 import Presentation.Views.MainView;
 import Services.AuthService;
 import Services.CarService;
+import Services.MaintenanceService;
 import Utilities.EventType;
 
 import javax.swing.*;
@@ -49,7 +50,7 @@ public class LoginController extends Observable {
                     UserResponseDto user = get();
                     if (user != null) {
                         loginView.setVisible(false);
-                        openMainView();
+                        openMainView(user);
                         notifyObservers(EventType.UPDATED, user);
                     } else {
                         JOptionPane.showMessageDialog(loginView, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
@@ -63,25 +64,31 @@ public class LoginController extends Observable {
         worker.execute();
     }
 
-    private void openMainView() {
+    private void openMainView(UserResponseDto user) {
         MainView mainView = new MainView();
 
         String host = "localhost";
         int serverPort = 7000;
         int messagesPort = 7001;
 
-
         // Inicializar las vistas que van dentro del main view.
         CarsView carsView = new CarsView(mainView);
         CarService carService = new CarService(host, serverPort);
-        new CarsController(carsView, carService);
+        CarsController carsController = new CarsController(carsView, carService);
+
+        MaintenancesView maintenancesView = new MaintenancesView(mainView);
+        MaintenanceService maintenanceService = new MaintenanceService(host, serverPort);
+        MaintenancesController maintenancesController = new MaintenancesController(maintenancesView, maintenanceService, carService);
+
+        // Inyectar referencia cruzada para refrescar combos de carros
+        carsController.setMaintenancesController(maintenancesController);
 
         Dictionary<String, JPanel> tabs = new Hashtable<>();
+        tabs.put("Maintenances", maintenancesView.getContentPanel());
         tabs.put("Cars", carsView.getContentPanel());
-
-        // Conectarse al puerto 7001 para escuchar transmisiones del servidor
-        mainView.connectToMessages(host, messagesPort);
         mainView.AddTabs(tabs);
+        mainView.connectToMessages(host, messagesPort);
         mainView.setVisible(true);
     }
 }
+
