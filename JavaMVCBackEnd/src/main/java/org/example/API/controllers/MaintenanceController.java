@@ -41,6 +41,8 @@ public class MaintenanceController {
                     return handleListMaintenances(request);
                 case "get":
                     return handleGetMaintenance(request);
+                case "listByCar":
+                    return handleListByCar(request);
                 default:
                     return new ResponseDto(false, "Unknown request: " + request.getRequest(), null);
             }
@@ -60,7 +62,13 @@ public class MaintenanceController {
             Car car = carService.getCarById(dto.getCarId());
             if (car == null) return new ResponseDto(false, "Car not found", null);
 
-            MaintenanceType type = MaintenanceType.valueOf(dto.getType());
+            MaintenanceType type;
+            try {
+                type = MaintenanceType.valueOf(dto.getType().toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                return new ResponseDto(false, "Invalid maintenance type: " + dto.getType(), null);
+            }
+
             Date cardate = Date.valueOf(dto.getDate());
 
             Maintenance maintenance = maintenanceService.createMaintenance(dto.getDescription(), type, car, cardate);
@@ -84,7 +92,13 @@ public class MaintenanceController {
             Car car = carService.getCarById(dto.getCarId());
             if (car == null) return new ResponseDto(false, "Car not found", null);
 
-            MaintenanceType type = MaintenanceType.valueOf(dto.getType());
+            MaintenanceType type;
+            try {
+                type = MaintenanceType.valueOf(dto.getType().toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                return new ResponseDto(false, "Invalid maintenance type: " + dto.getType(), null);
+            }
+
             Date cardate = Date.valueOf(dto.getDate());
 
             Maintenance maintenance = maintenanceService.updateMaintenance(dto.getId(), dto.getDescription(), type, car, cardate);
@@ -157,6 +171,26 @@ public class MaintenanceController {
         }
     }
 
+    // --- LIST MAINTENANCES BY CAR (para listByCar) ---
+    private ResponseDto handleListByCar(RequestDto request) {
+        try {
+            if (request.getToken() == null || request.getToken().isEmpty()) {
+                return new ResponseDto(false, "Unauthorized", null);
+            }
+            AddMaintenanceRequestDto dto = gson.fromJson(request.getData(), AddMaintenanceRequestDto.class);
+            Long carId = dto.getCarId();
+            List<Maintenance> maintenances = maintenanceService.getAllMaintenanceByCarId(carId);
+            List<MaintenanceResponseDto> dtos = maintenances.stream()
+                    .map(this::toResponseDto)
+                    .collect(Collectors.toList());
+            ListMaintenancesResponseDto response = new ListMaintenancesResponseDto(dtos);
+            return new ResponseDto(true, "Maintenances retrieved successfully", gson.toJson(response));
+        } catch (Exception e) {
+            System.out.println("Error in handleListByCar: " + e.getMessage());
+            return new ResponseDto(false, "Error listing maintenances: " + e.getMessage(), null);
+        }
+    }
+
     // --- Helper ---
     private MaintenanceResponseDto toResponseDto(Maintenance maintenance) {
         return new MaintenanceResponseDto(
@@ -170,5 +204,7 @@ public class MaintenanceController {
         );
     }
 }
+
+
 
 

@@ -4,46 +4,49 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9126591-462d-46c3-9f3c-1a093db94142" name="Changes" comment="Prueba 2">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/CarController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/MaintenanceController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/HibernateUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/AuthService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/CarService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/MaintenanceService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/RequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/ResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/auth/LoginRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/auth/RegisterRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/auth/UserResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/AddCarRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/CarResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/DeleteCarRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/ListCarsResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/UpdateCarRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/maintenances/AddMaintenanceRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/maintenances/DeleteMaintenanceRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/maintenances/ListMaintenancesResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/maintenances/MaintenanceResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/maintenances/UpdateMaintenanceRequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/Car.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/Maintenance.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/MaintenanceType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Server/ClientHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Server/MessageBroadcaster.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Server/SocketServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Utilities/PasswordUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migrations/V1__create_user_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migrations/V2__create_car_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migrations/V3__create_maintenance_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migrations/v4__create_users_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/hibernate.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$" beforeDir="false" />
+    <list default="true" id="f9126591-462d-46c3-9f3c-1a093db94142" name="Changes" comment="Prueba commit">
+      <change afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/maintenances/ListMaintenancesByCarRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/CarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/CarController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/MaintenanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/API/controllers/MaintenanceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/CarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/DataAccess/services/CarService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/AddCarRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/dtos/cars/AddCarRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/Maintenance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/Maintenance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/MaintenanceType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Domain/models/MaintenanceType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Server/SocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Server/SocketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migrations/V1__create_user_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migrations/V1__create_user_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migrations/V3__create_maintenance_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migrations/V3__create_maintenance_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migrations/v4__create_users_table.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/db/migrations/V1__create_user_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/migrations/V1__create_user_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/db/migrations/V3__create_maintenance_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/migrations/V3__create_maintenance_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/API/controllers/CarController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/API/controllers/CarController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/API/controllers/MaintenanceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/API/controllers/MaintenanceController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DataAccess/services/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DataAccess/services/AuthService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DataAccess/services/CarService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DataAccess/services/CarService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Domain/dtos/cars/AddCarRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Domain/dtos/cars/AddCarRequestDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Domain/models/Maintenance.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Domain/models/Maintenance.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Domain/models/MaintenanceType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Domain/models/MaintenanceType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Server/ClientHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Server/ClientHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/Server/SocketServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/Server/SocketServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/ResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/ResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/cars/CarResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/cars/CarResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/maintenances/ListMaintenancesResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/maintenances/ListMaintenancesResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/maintenances/MaintenanceResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Domain/Dtos/maintenances/MaintenanceResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Controllers/CarsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Controllers/CarsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Controllers/MaintenancesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Controllers/MaintenancesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Views/CarsView.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Views/CarsView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Views/MainView.form" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Views/MainView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Presentation/Views/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Services/BaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Services/BaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Services/CarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Services/CarService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Services/MaintenanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/Services/MaintenanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/cr/ac/una/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../JavaMVCFrontEnd/src/main/java/cr/ac/una/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +112,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/DELL/Documents/UNA/2025 II Semestre/Programación III/Laboratorios/V_Laboratorio/JavaMVCBackEnd&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/DELL/Documents/UNA/2025 II Semestre/Programación III/Laboratorios/V_Laboratorio-/JavaMVCBackEnd&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -225,6 +228,10 @@
       <workItem from="1761857940510" duration="1078000" />
       <workItem from="1761973501000" duration="21000" />
       <workItem from="1761973561812" duration="12979000" />
+      <workItem from="1762152863196" duration="3271000" />
+      <workItem from="1762201611846" duration="6377000" />
+      <workItem from="1762460512820" duration="10198000" />
+      <workItem from="1762549769441" duration="1513000" />
     </task>
     <task id="LOCAL-00001" summary="Prueba">
       <option name="closed" value="true" />
@@ -258,7 +265,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761730110443</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Prueba commit">
+      <option name="closed" value="true" />
+      <created>1762152907989</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1762152907989</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,6 +282,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Prueba" />
     <MESSAGE value="Prueba 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Prueba 2" />
+    <MESSAGE value="Prueba commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Prueba commit" />
   </component>
 </project>

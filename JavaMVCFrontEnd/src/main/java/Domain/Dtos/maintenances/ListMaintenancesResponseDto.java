@@ -10,3 +10,4 @@ public class ListMaintenancesResponseDto {
     public List<MaintenanceResponseDto> getMaintenances() { return maintenances; }
     public void setMaintenances(List<MaintenanceResponseDto> maintenances) { this.maintenances = maintenances; }
 }
+

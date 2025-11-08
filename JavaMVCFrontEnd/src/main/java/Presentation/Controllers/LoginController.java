@@ -2,7 +2,6 @@ package Presentation.Controllers;
 
 import Domain.Dtos.auth.UserResponseDto;
 import Presentation.Observable;
-import Presentation.Views.CarsView;
 import Presentation.Views.LoginView;
 import Presentation.Views.MainView;
 import Services.AuthService;
@@ -11,8 +10,6 @@ import Services.MaintenanceService;
 import Utilities.EventType;
 
 import javax.swing.*;
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 public class LoginController extends Observable {
 
@@ -49,11 +46,10 @@ public class LoginController extends Observable {
                 try {
                     UserResponseDto user = get();
                     if (user != null) {
-                        loginView.setVisible(false);
                         openMainView(user);
-                        notifyObservers(EventType.UPDATED, user);
+                        loginView.dispose();
                     } else {
-                        JOptionPane.showMessageDialog(loginView, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(loginView, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -69,26 +65,23 @@ public class LoginController extends Observable {
 
         String host = "localhost";
         int serverPort = 7000;
-        int messagesPort = 7001;
 
-        // Inicializar las vistas que van dentro del main view.
-        CarsView carsView = new CarsView(mainView);
         CarService carService = new CarService(host, serverPort);
-        CarsController carsController = new CarsController(carsView, carService);
-
-        MaintenancesView maintenancesView = new MaintenancesView(mainView);
         MaintenanceService maintenanceService = new MaintenanceService(host, serverPort);
-        MaintenancesController maintenancesController = new MaintenancesController(maintenancesView, maintenanceService, carService);
 
-        // Inyectar referencia cruzada para refrescar combos de carros
+        Long currentUserId = user.getId();
+
+        CarsController carsController = new CarsController(mainView, carService, currentUserId);
+        MaintenancesController maintenancesController = new MaintenancesController(mainView, maintenanceService, carService, currentUserId);
+
         carsController.setMaintenancesController(maintenancesController);
 
-        Dictionary<String, JPanel> tabs = new Hashtable<>();
-        tabs.put("Maintenances", maintenancesView.getContentPanel());
-        tabs.put("Cars", carsView.getContentPanel());
-        mainView.AddTabs(tabs);
-        mainView.connectToMessages(host, messagesPort);
+        // Ya no se usa AddTabs, simplemente muestra la vista principal
         mainView.setVisible(true);
     }
 }
+
+
+
+
 

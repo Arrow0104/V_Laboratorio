@@ -1,4 +1,4 @@
-CREATE TABLE maintenance (
+CREATE TABLE maintenances (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     description VARCHAR(100) NULL,
     type VARCHAR(255) NULL,

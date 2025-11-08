@@ -34,11 +34,11 @@ public class CarResponseDto {
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
     public UserResponseDto getOwner() { return owner; }
     public void setOwner(UserResponseDto owner) { this.owner = owner; }
-
     @Override
     public String toString() {
-        return id + " - " + make + " " + model;
+        return "ID: " + getId() + " - Model: " + getModel();
     }
+
 }
 
 

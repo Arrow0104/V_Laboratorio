@@ -1,4 +1,4 @@
-CREATE TABLE maintenance (
+CREATE TABLE maintenances (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     description VARCHAR(100) NULL,
     type VARCHAR(255) NULL,
@@ -8,3 +8,4 @@ CREATE TABLE maintenance (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_car_maintenance FOREIGN KEY (car_id) REFERENCES cars(id) ON DELETE CASCADE
 );
+-- Prueba 2

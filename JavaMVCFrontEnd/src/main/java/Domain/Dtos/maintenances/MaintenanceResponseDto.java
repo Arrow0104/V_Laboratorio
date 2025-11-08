@@ -1,35 +1,72 @@
 package Domain.Dtos.maintenances;
 
+import com.google.gson.annotations.SerializedName;
+
 public class MaintenanceResponseDto {
     private Long id;
     private String description;
-    private String date;
+    private String type;
     private Long carId;
-    private Long userId;
-    private String type; // <-- Agrega este campo
+    @SerializedName("cardate")
+    private String date;
+    private String createdAt;
+    private String updatedAt;
 
     public MaintenanceResponseDto() {}
 
-    public MaintenanceResponseDto(Long id, String description, String date, Long carId, Long userId, String type) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
-        this.date = date;
-        this.carId = carId;
-        this.userId = userId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
         this.type = type;
     }
 
-    // Getters y setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
-    public Long getCarId() { return carId; }
-    public void setCarId(Long carId) { this.carId = carId; }
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public Long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(Long carId) {
+        this.carId = carId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

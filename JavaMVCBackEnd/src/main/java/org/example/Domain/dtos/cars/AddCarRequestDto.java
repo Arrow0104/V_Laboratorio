@@ -4,15 +4,13 @@ public class AddCarRequestDto {
     private String make;
     private String model;
     private int year;
-    private Long ownerId;
 
     public AddCarRequestDto() {}
 
-    public AddCarRequestDto(String make, String model, int year, Long ownerId) {
+    public AddCarRequestDto(String make, String model, int year) {
         this.make = make;
         this.model = model;
         this.year = year;
-        this.ownerId = ownerId;
     }
 
     // Getters & Setters
@@ -22,6 +20,11 @@ public class AddCarRequestDto {
     public void setModel(String model) { this.model = model; }
     public int getYear() { return year; }
     public void setYear(int year) { this.year = year; }
-    public Long getOwnerId() { return ownerId; }
-    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+
+    // Validación básica
+    public boolean isValid() {
+        return make != null && !make.isEmpty() &&
+                model != null && !model.isEmpty() &&
+                year > 1900;
+    }
 }

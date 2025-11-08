@@ -6,7 +6,9 @@ import org.example.Domain.dtos.ResponseDto;
 import org.example.Domain.dtos.auth.UserResponseDto;
 import org.example.Domain.dtos.cars.*;
 import org.example.Domain.models.Car;
+import org.example.Domain.models.User;
 import org.example.DataAccess.services.CarService;
+import org.example.DataAccess.services.AuthService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,10 +16,12 @@ import java.util.stream.Collectors;
 public class CarController {
 
     private final CarService carService;
+    private final AuthService authService;
     private final Gson gson = new Gson();
 
-    public CarController(CarService carService) {
+    public CarController(CarService carService, AuthService authService) {
         this.carService = carService;
+        this.authService = authService;
     }
 
     public ResponseDto route(RequestDto request) {
@@ -47,15 +51,20 @@ public class CarController {
             if (request.getToken() == null || request.getToken().isEmpty()) {
                 return new ResponseDto(false, "Unauthorized", null);
             }
-
+            User user = authService.getUserByToken(request.getToken());
+            if (user == null) {
+                return new ResponseDto(false, "Invalid token", null);
+            }
             AddCarRequestDto dto = gson.fromJson(request.getData(), AddCarRequestDto.class);
-            Car car = carService.createCar(dto.getMake(), dto.getModel(), dto.getYear(), dto.getOwnerId());
-
+            if (dto == null || !dto.isValid()) {
+                return new ResponseDto(false, "Invalid car data", null);
+            }
+            Car car = carService.createCar(dto.getMake(), dto.getModel(), dto.getYear(), user.getId());
             CarResponseDto response = toResponseDto(car);
             return new ResponseDto(true, "Car added successfully", gson.toJson(response));
         } catch (Exception e) {
             System.out.println("Error in handleAddCar: " + e.getMessage());
-            throw e;
+            return new ResponseDto(false, "Could not add car: " + e.getMessage(), null);
         }
     }
 
@@ -65,14 +74,19 @@ public class CarController {
             if (request.getToken() == null || request.getToken().isEmpty()) {
                 return new ResponseDto(false, "Unauthorized", null);
             }
-
+            User user = authService.getUserByToken(request.getToken());
+            if (user == null) {
+                return new ResponseDto(false, "Invalid token", null);
+            }
             UpdateCarRequestDto dto = gson.fromJson(request.getData(), UpdateCarRequestDto.class);
-            Car updated = carService.updateCar(dto.getId(), dto.getMake(), dto.getModel(), dto.getYear());
-
-            if (updated == null) {
+            Car car = carService.getCarById(dto.getId());
+            if (car == null) {
                 return new ResponseDto(false, "Car not found", null);
             }
-
+            if (!car.getOwner().getId().equals(user.getId())) {
+                return new ResponseDto(false, "Forbidden: not your car", null);
+            }
+            Car updated = carService.updateCar(dto.getId(), dto.getMake(), dto.getModel(), dto.getYear());
             CarResponseDto response = toResponseDto(updated);
             return new ResponseDto(true, "Car updated successfully", gson.toJson(response));
         } catch (Exception e) {
@@ -87,14 +101,22 @@ public class CarController {
             if (request.getToken() == null || request.getToken().isEmpty()) {
                 return new ResponseDto(false, "Unauthorized", null);
             }
-
-            DeleteCarRequestDto dto = gson.fromJson(request.getData(), DeleteCarRequestDto.class);
-            boolean deleted = carService.deleteCar(dto.getId());
-
-            if (!deleted) {
-                return new ResponseDto(false, "Car not found or could not be deleted", null);
+            User user = authService.getUserByToken(request.getToken());
+            if (user == null) {
+                return new ResponseDto(false, "Invalid token", null);
             }
-
+            DeleteCarRequestDto dto = gson.fromJson(request.getData(), DeleteCarRequestDto.class);
+            Car car = carService.getCarById(dto.getId());
+            if (car == null) {
+                return new ResponseDto(false, "Car not found", null);
+            }
+            if (!car.getOwner().getId().equals(user.getId())) {
+                return new ResponseDto(false, "Forbidden: not your car", null);
+            }
+            boolean deleted = carService.deleteCar(dto.getId());
+            if (!deleted) {
+                return new ResponseDto(false, "Car could not be deleted", null);
+            }
             return new ResponseDto(true, "Car deleted successfully", null);
         } catch (Exception e) {
             System.out.println("Error in handleDeleteCar: " + e.getMessage());
@@ -108,12 +130,14 @@ public class CarController {
             if (request.getToken() == null || request.getToken().isEmpty()) {
                 return new ResponseDto(false, "Unauthorized", null);
             }
-
-            List<Car> cars = carService.getAllCars();
+            User user = authService.getUserByToken(request.getToken());
+            if (user == null) {
+                return new ResponseDto(false, "Invalid token", null);
+            }
+            List<Car> cars = carService.getCarsByUser(user);
             List<CarResponseDto> carDtos = cars.stream()
                     .map(this::toResponseDto)
                     .collect(Collectors.toList());
-
             ListCarsResponseDto response = new ListCarsResponseDto(carDtos);
             return new ResponseDto(true, "Cars retrieved successfully", gson.toJson(response));
         } catch (Exception e) {
@@ -128,14 +152,18 @@ public class CarController {
             if (request.getToken() == null || request.getToken().isEmpty()) {
                 return new ResponseDto(false, "Unauthorized", null);
             }
-
+            User user = authService.getUserByToken(request.getToken());
+            if (user == null) {
+                return new ResponseDto(false, "Invalid token", null);
+            }
             DeleteCarRequestDto dto = gson.fromJson(request.getData(), DeleteCarRequestDto.class);
             Car car = carService.getCarById(dto.getId());
-
             if (car == null) {
                 return new ResponseDto(false, "Car not found", null);
             }
-
+            if (!car.getOwner().getId().equals(user.getId())) {
+                return new ResponseDto(false, "Forbidden: not your car", null);
+            }
             CarResponseDto response = toResponseDto(car);
             return new ResponseDto(true, "Car retrieved successfully", gson.toJson(response));
         } catch (Exception e) {
@@ -154,7 +182,6 @@ public class CarController {
                 car.getOwner().getCreatedAt().toString(),
                 car.getOwner().getUpdatedAt().toString()
         );
-
         return new CarResponseDto(
                 car.getId(),
                 car.getMake(),
@@ -166,3 +193,5 @@ public class CarController {
         );
     }
 }
+
+

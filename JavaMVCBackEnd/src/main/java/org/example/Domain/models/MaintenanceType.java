@@ -2,6 +2,6 @@ package org.example.Domain.models;
 
 public enum MaintenanceType {
     REPAIR,
-    MOD,
+    MODIFICATION,
     ROUTINE
 }

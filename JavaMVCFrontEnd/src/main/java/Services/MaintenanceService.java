@@ -1,4 +1,3 @@
-// src/main/java/Services/MaintenanceService.java
 package Services;
 
 import Domain.Dtos.RequestDto;
@@ -47,6 +46,18 @@ public class MaintenanceService extends BaseService {
             RequestDto request = new RequestDto("Maintenances", "list", "", userId.toString());
             ResponseDto response = sendRequest(request);
             if (!response.isSuccess()) return null;
+            ListMaintenancesResponseDto listResponse = gson.fromJson(response.getData(), ListMaintenancesResponseDto.class);
+            return listResponse.getMaintenances();
+        });
+    }
+
+    // Nuevo método para listar mantenimientos por auto
+    public Future<List<MaintenanceResponseDto>> listMaintenancesByCarAsync(Long carId, Long userId) {
+        return executor.submit(() -> {
+            String payload = gson.toJson(new ListMaintenancesByCarRequestDto(carId));
+            RequestDto request = new RequestDto("Maintenances", "listByCar", payload, userId.toString());
+            ResponseDto response = sendRequest(request);
+            if (response == null || !response.isSuccess()) return null;
             ListMaintenancesResponseDto listResponse = gson.fromJson(response.getData(), ListMaintenancesResponseDto.class);
             return listResponse.getMaintenances();
         });

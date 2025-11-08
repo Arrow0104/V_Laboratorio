@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class CarService extends BaseService {
-    // Ejecutor para Hilos.
     private final ExecutorService executor = Executors.newThreadPerTaskExecutor(Thread.ofVirtual().factory());
 
     public CarService(String host, int port) {
@@ -18,10 +17,29 @@ public class CarService extends BaseService {
 
     public Future<CarResponseDto> addCarAsync(AddCarRequestDto dto, Long userId) {
         return executor.submit(() -> {
+            System.out.println("[CarService] Attempting to add car: " + dto.getMake() + " " + dto.getModel() + " " + dto.getYear());
             RequestDto request = new RequestDto("Cars", "add", gson.toJson(dto), userId.toString());
+            System.out.println("[CarService] Request JSON: " + gson.toJson(request));
+
             ResponseDto response = sendRequest(request);
-            if (!response.isSuccess()) return null;
-            return gson.fromJson(response.getData(), CarResponseDto.class);
+
+            if (response == null) {
+                System.err.println("[CarService] ERROR: Response is NULL - Server may be down or not responding");
+                return null;
+            }
+
+            System.out.println("[CarService] Response success: " + response.isSuccess());
+            System.out.println("[CarService] Response message: " + response.getMessage());
+            System.out.println("[CarService] Response data: " + response.getData());
+
+            if (!response.isSuccess()) {
+                System.err.println("[CarService] ERROR: Server returned failure - " + response.getMessage());
+                return null;
+            }
+
+            CarResponseDto carResponse = gson.fromJson(response.getData(), CarResponseDto.class);
+            System.out.println("[CarService] Car added successfully with ID: " + (carResponse != null ? carResponse.getId() : "NULL"));
+            return carResponse;
         });
     }
 

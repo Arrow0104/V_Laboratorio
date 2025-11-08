@@ -5,49 +5,67 @@ import Domain.Dtos.cars.CarResponseDto;
 import Domain.Dtos.cars.DeleteCarRequestDto;
 import Domain.Dtos.cars.UpdateCarRequestDto;
 import Presentation.Observable;
-import Presentation.Views.CarsView;
+import Presentation.Views.MainView;
 import Services.CarService;
 import Utilities.EventType;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.util.List;
 
 public class CarsController extends Observable {
-    private final CarsView carsView;
+    private final MainView mainView;
     private final CarService carService;
-    private MaintenancesController maintenancesController; // Referencia opcional
+    private final Long currentUserId;
+    private MaintenancesController maintenancesController;
 
-    public CarsController(CarsView carsView, CarService carService) {
-        this.carsView = carsView;
+    public CarsController(MainView mainView, CarService carService, Long currentUserId) {
+        this.mainView = mainView;
         this.carService = carService;
+        this.currentUserId = currentUserId;
 
-        addObserver(carsView.getTableModel());
+        addObserver(mainView.getCarsTableModel());
         loadCarsAsync();
         addListeners();
+
+        // Panel de mantenimientos deshabilitado y vacío al inicio
+        if (maintenancesController != null) {
+            maintenancesController.clearMaintenancesTable();
+            maintenancesController.setControlsEnabled(false);
+        }
     }
 
-    // Permite inyectar la referencia después de crear ambos controllers
     public void setMaintenancesController(MaintenancesController maintenancesController) {
         this.maintenancesController = maintenancesController;
+        // Asegura estado inicial
+        maintenancesController.clearMaintenancesTable();
+        maintenancesController.setControlsEnabled(false);
     }
 
     private void loadCarsAsync() {
-        carsView.showLoading(true);
+        mainView.showCarsLoading(true);
+
         SwingWorker<List<CarResponseDto>, Void> worker = new SwingWorker<>() {
             @Override
             protected List<CarResponseDto> doInBackground() throws Exception {
-                return carService.listCarsAsync(1L).get();
+                return carService.listCarsAsync(currentUserId).get();
             }
 
             @Override
             protected void done() {
                 try {
                     List<CarResponseDto> cars = get();
-                    carsView.getTableModel().setCars(cars);
+                    mainView.getCarsTableModel().setCars(cars);
+                    if (maintenancesController != null) {
+                        maintenancesController.updateCarOptions(cars);
+                    }
                 } catch (Exception e) {
+                    JOptionPane.showMessageDialog(mainView,
+                            "Error loading cars: " + e.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     e.printStackTrace();
                 } finally {
-                    carsView.showLoading(false);
+                    mainView.showCarsLoading(false);
                 }
             }
         };
@@ -55,20 +73,22 @@ public class CarsController extends Observable {
     }
 
     private void addListeners() {
-        carsView.getAgregarButton().addActionListener(e -> handleAddCar());
-        carsView.getUpdateButton().addActionListener(e -> handleUpdateCar());
-        carsView.getBorrarButton().addActionListener(e -> handleDeleteCar());
-        carsView.getClearButton().addActionListener(e -> handleClearFields());
-        carsView.getCarsTable().getSelectionModel().addListSelectionListener(e -> handleRowSelection());
+        mainView.getAddCarButton().addActionListener(e -> handleAddCar());
+        mainView.getUpdateCarButton().addActionListener(e -> handleUpdateCar());
+        mainView.getDeleteCarButton().addActionListener(e -> handleDeleteCar());
+        mainView.getClearCarButton().addActionListener(e -> handleClearFields());
+        mainView.getCarsTable().getSelectionModel().addListSelectionListener(this::handleRowSelection);
     }
 
     private void handleAddCar() {
-        String make = carsView.getCarMakeField().getText();
-        String model = carsView.getCarModelField().getText();
-        String yearStr = carsView.getYearTextField().getText();
+        String make = mainView.getCarMakeField().getText().trim();
+        String model = mainView.getCarModelField().getText().trim();
+        String yearStr = mainView.getYearTextField().getText().trim();
 
         if (make.isEmpty() || model.isEmpty() || yearStr.isEmpty()) {
-            JOptionPane.showMessageDialog(carsView.getContentPanel(), "All fields are required", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(mainView,
+                    "All fields are required",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -76,17 +96,19 @@ public class CarsController extends Observable {
         try {
             year = Integer.parseInt(yearStr);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(carsView.getContentPanel(), "Year must be a number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainView,
+                    "Year must be a number",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        AddCarRequestDto dto = new AddCarRequestDto(make, model, year, 1L);
+        AddCarRequestDto dto = new AddCarRequestDto(make, model, year, currentUserId);
 
-        carsView.showLoading(true);
+        mainView.showCarsLoading(true);
         SwingWorker<CarResponseDto, Void> worker = new SwingWorker<>() {
             @Override
             protected CarResponseDto doInBackground() throws Exception {
-                return carService.addCarAsync(dto, 1L).get();
+                return carService.addCarAsync(dto, currentUserId).get();
             }
 
             @Override
@@ -95,18 +117,25 @@ public class CarsController extends Observable {
                     CarResponseDto car = get();
                     if (car != null) {
                         notifyObservers(EventType.CREATED, car);
-                        carsView.clearFields();
-                        // Notificar a MaintenancesController para actualizar la lista de carros
+                        mainView.clearCarFields();
                         if (maintenancesController != null) {
-                            maintenancesController.loadCarsAsync();
+                            maintenancesController.updateCarOptions(mainView.getCarsTableModel().getCars());
                         }
+                        JOptionPane.showMessageDialog(mainView,
+                                "Car added successfully",
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(carsView.getContentPanel(), "Failed to add car", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainView,
+                                "Could not add car",
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainView,
+                            "Error adding car: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 } finally {
-                    carsView.showLoading(false);
+                    mainView.showCarsLoading(false);
                 }
             }
         };
@@ -114,16 +143,23 @@ public class CarsController extends Observable {
     }
 
     private void handleUpdateCar() {
-        int selectedRow = carsView.getCarsTable().getSelectedRow();
-        if (selectedRow < 0) return;
+        int selectedRow = mainView.getCarsTable().getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(mainView,
+                    "Please select a car to update",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        CarResponseDto selectedCar = carsView.getTableModel().getCars().get(selectedRow);
-        String make = carsView.getCarMakeField().getText();
-        String model = carsView.getCarModelField().getText();
-        String yearStr = carsView.getYearTextField().getText();
+        CarResponseDto selectedCar = mainView.getCarsTableModel().getCars().get(selectedRow);
+        String make = mainView.getCarMakeField().getText().trim();
+        String model = mainView.getCarModelField().getText().trim();
+        String yearStr = mainView.getYearTextField().getText().trim();
 
         if (make.isEmpty() || model.isEmpty() || yearStr.isEmpty()) {
-            JOptionPane.showMessageDialog(carsView.getContentPanel(), "All fields are required", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(mainView,
+                    "All fields are required",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -131,37 +167,48 @@ public class CarsController extends Observable {
         try {
             year = Integer.parseInt(yearStr);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(carsView.getContentPanel(), "Year must be a number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainView,
+                    "Year must be a number",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        UpdateCarRequestDto dto = new UpdateCarRequestDto(selectedCar.getId(), make, model, year, selectedCar.getOwnerId());
+        UpdateCarRequestDto dto = new UpdateCarRequestDto(
+                selectedCar.getId(), make, model, year, selectedCar.getOwnerId()
+        );
 
-        carsView.showLoading(true);
+        mainView.showCarsLoading(true);
         SwingWorker<CarResponseDto, Void> worker = new SwingWorker<>() {
             @Override
             protected CarResponseDto doInBackground() throws Exception {
-                return carService.updateCarAsync(dto, 1L).get();
+                return carService.updateCarAsync(dto, currentUserId).get();
             }
 
             @Override
             protected void done() {
                 try {
-                    CarResponseDto updatedCar = get();
-                    if (updatedCar != null) {
-                        notifyObservers(EventType.UPDATED, updatedCar);
-                        carsView.clearFields();
-                        // También podrías actualizar la lista en mantenimientos si lo deseas
+                    CarResponseDto updated = get();
+                    if (updated != null) {
+                        notifyObservers(EventType.UPDATED, updated);
+                        mainView.clearCarFields();
                         if (maintenancesController != null) {
-                            maintenancesController.loadCarsAsync();
+                            maintenancesController.updateCarOptions(mainView.getCarsTableModel().getCars());
                         }
+                        JOptionPane.showMessageDialog(mainView,
+                                "Car updated successfully",
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(carsView.getContentPanel(), "Failed to update car", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainView,
+                                "Could not update car",
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainView,
+                            "Error updating car: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 } finally {
-                    carsView.showLoading(false);
+                    mainView.showCarsLoading(false);
                 }
             }
         };
@@ -169,17 +216,33 @@ public class CarsController extends Observable {
     }
 
     private void handleDeleteCar() {
-        int selectedRow = carsView.getCarsTable().getSelectedRow();
-        if (selectedRow < 0) return;
+        int selectedRow = mainView.getCarsTable().getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(mainView,
+                    "Please select a car to delete",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        CarResponseDto selectedCar = carsView.getTableModel().getCars().get(selectedRow);
+        CarResponseDto selectedCar = mainView.getCarsTableModel().getCars().get(selectedRow);
+
+        int confirm = JOptionPane.showConfirmDialog(mainView,
+                "Are you sure you want to delete this car?\nThis action cannot be undone.",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
         DeleteCarRequestDto dto = new DeleteCarRequestDto(selectedCar.getId());
 
-        carsView.showLoading(true);
+        mainView.showCarsLoading(true);
         SwingWorker<Boolean, Void> worker = new SwingWorker<>() {
             @Override
             protected Boolean doInBackground() throws Exception {
-                return carService.deleteCarAsync(dto, 1L).get();
+                return carService.deleteCarAsync(dto, currentUserId).get();
             }
 
             @Override
@@ -188,17 +251,25 @@ public class CarsController extends Observable {
                     Boolean success = get();
                     if (success) {
                         notifyObservers(EventType.DELETED, selectedCar.getId());
-                        carsView.clearFields();
+                        mainView.clearCarFields();
                         if (maintenancesController != null) {
-                            maintenancesController.loadCarsAsync();
+                            maintenancesController.updateCarOptions(mainView.getCarsTableModel().getCars());
                         }
+                        JOptionPane.showMessageDialog(mainView,
+                                "Car deleted successfully",
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(carsView.getContentPanel(), "Failed to delete car", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(mainView,
+                                "Could not delete car",
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainView,
+                            "Error deleting car: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 } finally {
-                    carsView.showLoading(false);
+                    mainView.showCarsLoading(false);
                 }
             }
         };
@@ -206,14 +277,31 @@ public class CarsController extends Observable {
     }
 
     private void handleClearFields() {
-        carsView.clearFields();
+        mainView.clearCarFields();
+        if (maintenancesController != null) {
+            maintenancesController.clearMaintenancesTable();
+            maintenancesController.setControlsEnabled(false);
+        }
     }
 
-    private void handleRowSelection() {
-        int row = carsView.getCarsTable().getSelectedRow();
-        if (row >= 0) {
-            CarResponseDto car = carsView.getTableModel().getCars().get(row);
-            carsView.populateFields(car);
+    private void handleRowSelection(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            int row = mainView.getCarsTable().getSelectedRow();
+            if (row >= 0) {
+                CarResponseDto car = mainView.getCarsTableModel().getCars().get(row);
+                mainView.populateCarFields(car);
+                if (maintenancesController != null) {
+                    maintenancesController.showMaintenancesForCar(car.getId());
+                    maintenancesController.setControlsEnabled(true);
+                }
+            } else {
+                if (maintenancesController != null) {
+                    maintenancesController.clearMaintenancesTable();
+                    maintenancesController.setControlsEnabled(false);
+                }
+            }
         }
     }
 }
+
+

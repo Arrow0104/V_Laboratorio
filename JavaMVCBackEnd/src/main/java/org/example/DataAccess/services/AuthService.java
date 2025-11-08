@@ -12,11 +12,9 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
-
 public class AuthService {
     private final SessionFactory sessionFactory;
 
-    // Configurable constants for password hashing
     private static final int SALT_LENGTH = 16;
     private static final int ITERATIONS = 65536;
     private static final int KEY_LENGTH = 256;
@@ -25,19 +23,13 @@ public class AuthService {
         this.sessionFactory = sessionFactory;
     }
 
-    // -------------------------
-    // User Registration
-    // -------------------------
     public User register(String username, String email, String password, String role) {
         try (Session session = sessionFactory.openSession()) {
-            // Verificar si el usuario ya existe
             if (getUserByUsername(username) != null || getUserByEmail(email) != null) {
                 throw new IllegalArgumentException("Username or email already in use");
             }
-
-            // Guardar el nuevo usuario si no existe
-            String salt = generateSalt(); // Crear sal (random string)
-            String hashedPassword = hashPassword(password, salt); // Crear hash de la contrasena
+            String salt = generateSalt();
+            String hashedPassword = hashPassword(password, salt);
 
             User user = new User();
             user.setUsername(username);
@@ -47,8 +39,8 @@ public class AuthService {
             user.setRole(role);
 
             Transaction tx = session.beginTransaction();
-            session.persist(user); // Guardar en la base de datos.
-            tx.commit(); // Commit del cambio en la base de datos.
+            session.persist(user);
+            tx.commit();
 
             return user;
         } catch (Exception e) {
@@ -58,24 +50,17 @@ public class AuthService {
         }
     }
 
-    // -------------------------
-    // User Login
-    // -------------------------
     public boolean login(String usernameOrEmail, String password) {
         try{
             User user = getUserByUsername(usernameOrEmail);
-
             if (user == null) {
                 user = getUserByEmail(usernameOrEmail);
             }
-
             if (user == null) {
                 return false;
             }
-
             String hashedInput = hashPassword(password, user.getSalt());
-            return hashedInput.equals(user.getPasswordHash()); // Comparar hashes, no contrasenas en string
-
+            return hashedInput.equals(user.getPasswordHash());
         } catch (Exception e) {
             String message = String.format("An error occurred when processing: %s. Details: %s", "login", e);
             System.out.println(message);
@@ -83,9 +68,6 @@ public class AuthService {
         }
     }
 
-    // -------------------------
-    // Helper Queries
-    // -------------------------
     public User getUserByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM User WHERE username = :username", User.class)
@@ -110,14 +92,19 @@ public class AuthService {
         }
     }
 
-    // -------------------------
-    // Password Hashing Utilities
-    // -------------------------
+    // Modificado para aceptar el ID como token
+    public User getUserByToken(String token) {
+        if (token == null || token.isEmpty()) return null;
+        try {
+            long userId = Long.parseLong(token);
+            try (Session session = sessionFactory.openSession()) {
+                return session.get(User.class, userId);
+            }
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
-    /**
-     * Crear la salt para la contransena del usuario
-     * @return String aleatorio de SALT_LENGTH caracteres
-     */
     private String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] saltBytes = new byte[SALT_LENGTH];
@@ -125,24 +112,17 @@ public class AuthService {
         return Base64.getEncoder().encodeToString(saltBytes);
     }
 
-    /**
-     * Funcion para hacer el hash de la contrasena + salt.
-     * @param password El password del usuario
-     * @param salt La salt generada
-     * @return Retorna un string de tipo Hash que representa la contrasena del usuario + la salt
-     */
     private String hashPassword(String password, String salt) {
         try {
             byte[] saltBytes = Base64.getDecoder().decode(salt);
-
             PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), saltBytes, ITERATIONS, KEY_LENGTH);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256"); // SHA256
-
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             byte[] hash = factory.generateSecret(spec).getEncoded();
             return Base64.getEncoder().encodeToString(hash);
-
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException("Error inesperado al intentar crear el hash del usuario.", e);
         }
     }
 }
+
+
